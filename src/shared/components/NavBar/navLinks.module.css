@@ -1,0 +1,23 @@
+.NavLink{
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding-left: 2rem;
+}
+.NavLink li{
+    padding: 1rem;
+    font-size: 1.5rem;
+}
+
+.NavLink li a{
+    padding: 1rem;
+    border-radius: 1rem ;
+}
+
+
+a.active{
+    color: black;
+    background-color: orange;
+    
+}
+

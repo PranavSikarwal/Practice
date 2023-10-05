@@ -1,0 +1,22 @@
+.sideDrawer{
+    height: 100%;
+    width: 80vw;
+    position:fixed;
+    top:0;
+    left:0;
+    justify-content: center;
+    z-index: 1;
+    align-items: flex-start;
+    background-color: wheat;
+    border-right: 3px solid black;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    display: none;
+}
+
+@media screen and (max-width:600px) {
+    .sideDrawer{
+        display:flex;
+        padding-top: 20rem;
+    }
+}

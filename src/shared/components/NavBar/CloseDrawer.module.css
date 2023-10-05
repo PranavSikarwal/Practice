@@ -1,0 +1,13 @@
+.closeDrawer {
+  border: none;
+  mix-blend-mode: darken;
+  display: flex;
+  justify-content:flex-end;
+  position: absolute;
+  z-index: 3;
+  font-size: 5rem;
+  margin: 1rem;
+  top: 3rem;
+  left: 3rem;
+}
+

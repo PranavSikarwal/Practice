@@ -1,0 +1,59 @@
+.userItem{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 1rem;
+    border: 0.1rem solid black;
+    margin:auto;
+    width: 45rem;
+    min-width: 30rem;
+    padding: 0.3rem 1rem 0.3rem 0.3rem;
+
+}
+
+.userInfo{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+.img{
+    height: 5rem;
+    width: 5rem;
+    padding-right: 1rem;
+    mix-blend-mode: darken;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    mix-blend-mode: darken;
+    text-decoration: none;
+}
+.name{
+    font-size: 3rem;
+    overflow: hidden;
+    text-align: center;
+    
+} 
+.places{
+    font-size: 1.5rem;
+    
+}
+.userItem:hover{
+    background-color: antiquewhite;
+}
+p {
+    color:black;
+}
+
+@media screen and (max-width:600px){
+    .userItem{
+        scale: 0.75;
+    }
+}
+.link{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,40 @@
+.header{
+    padding: 1rem 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: aquamarine;
+}
+.sideDrawer{
+    font-size: 3rem;
+    border: none;
+    mix-blend-mode: darken;
+    display: none;
+}
+
+
+@media screen and (max-width:600px){
+    .sideDrawer{
+        display: block;
+    }
+    .linksDrawer{
+        flex-direction: column;
+        
+    }
+    .linksDrawer li{
+        background-color:blanchedalmond;
+        border: 2px solid ghostwhite;
+        border-radius: 1rem;
+        margin: 1rem 0rem;
+        padding: 2rem 2rem !important;
+        text-align: center;
+    }
+    .linksDrawer li a{
+        font-size: 3rem;
+        
+    }
+    li a.active{
+        background-color: darkkhaki !important;
+    }
+}
