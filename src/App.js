@@ -13,37 +13,39 @@ import UserPlaces from './places/pages/UserPlaces';
 import UpdatePlace from './places/pages/UpdatePlace'
 // import Map from "./shared/components/UIElements/map";
 import Auth from "./users/pages/Auth";
+import AuthContext from "./shared/context/AuthContext";
 
 const App = () => {
   return (
-    
-    <Router>
-      <MainHeader />
-      <main className="main">
-      <Switch>
-        
-          <Route path="/" exact>
-            <Users />
-          </Route>
-
-          <Route path='/:userId/places' exact>
-            <UserPlaces />
-          </Route>
+    <AuthContext.provider>
+      <Router>
+        <MainHeader />
+        <main className="main">
+        <Switch>
           
-          <Route path="/places/new">
-            <NewPlaces />
-          </Route>
-          <Route path="/places/:placeid">
-            <UpdatePlace />
-          </Route>
-          <Route path="/auth">
-            <Auth/>
-          </Route>
-          <Redirect to="/" />
-        
-      </Switch>
-      </main>
-    </Router>
+            <Route path="/" exact>
+              <Users />
+            </Route>
+
+            <Route path='/:userId/places' exact>
+              <UserPlaces />
+            </Route>
+            
+            <Route path="/places/new">
+              <NewPlaces />
+            </Route>
+            <Route path="/places/:placeid">
+              <UpdatePlace />
+            </Route>
+            <Route path="/auth">
+              <Auth/>
+            </Route>
+            <Redirect to="/" />
+          
+        </Switch>
+        </main>
+      </Router>
+    </AuthContext.provider>
   );
 };
 

@@ -1,13 +1,40 @@
-import React from "react";
+import React,{useState} from "react";
 import Input from "../../shared/components/FormElements/Input";
 import {
     VALIDATOR_EMAIL,
-    VALIDATOR_MINLENGTH,
+    VALIDATOR_MINLENGTH
 } from "../../shared/util/validators";
 import {useForm} from "../../shared/hooks/FormHook";
 
 const Auth = (props) => {
-    const [formState, inputHandler] = useForm(
+    const [isLogin,setIsLogin] =useState(true);
+    const loginToggle = (event)=>{
+        event.preventDefault();
+        if(!isLogin === true){
+            let newInputs ={};
+            let formValid = true;
+            for (let obj in formState.inputs){
+                if(obj==="name"){
+                    continue;
+                }
+                formValid = formValid && (formState.inputs[obj].isValid);
+                newInputs = {...newInputs, [obj]:{...formState.inputs[obj]}};
+            }
+            setFormState({
+                ...newInputs
+            },formValid);
+        }else{
+            setFormState({
+                ...formState.inputs,
+                name:{
+                    value:"",
+                    isValid: false
+                } 
+            },false);
+        }
+        setIsLogin((previousState=>!previousState)); 
+    }
+    const [formState, inputHandler, setFormState] = useForm(
         {
             email: {
                 value: "",
@@ -27,6 +54,17 @@ const Auth = (props) => {
                 console.log(formState);
             }}
         >
+            <button onClick={loginToggle}>Toggle Mode</button>
+            {!isLogin && <Input
+                id="name"
+                element="input"
+                type="text"
+                placeholder="Full Name"
+                label="User Name"
+                validators={[VALIDATOR_MINLENGTH(5)]}
+                errorText="Must Enter your name."
+                onInput={inputHandler}
+            />}
             <Input
                 id="email"
                 element="input"
@@ -36,7 +74,7 @@ const Auth = (props) => {
                 validators={[VALIDATOR_EMAIL()]}
                 errorText="Must Enter Email to perform Login..."
                 onInput={inputHandler}
-                value={formState.inputs.email.value}
+                
             />
             <Input
                 id="password"
@@ -47,9 +85,8 @@ const Auth = (props) => {
                 validators={[VALIDATOR_MINLENGTH(5)]}
                 errorText="Minimum 5 characters required."
                 onInput={inputHandler}
-                value={formState.inputs.password.value}
             />
-            <button type="submit" disabled={!formState.isValid}>LOGIN</button>
+            <button type="submit" disabled={!formState.isValid}>{isLogin?"LOGIN":"SIGN UP"}</button>
         </form>
     );
 };
