@@ -1,13 +1,15 @@
-import React,{useState} from "react";
+import React,{useContext, useState} from "react";
 import Input from "../../shared/components/FormElements/Input";
 import {
     VALIDATOR_EMAIL,
     VALIDATOR_MINLENGTH
 } from "../../shared/util/validators";
 import {useForm} from "../../shared/hooks/FormHook";
-
+import { AuthContext } from "../../shared/context/AuthContext";
 const Auth = (props) => {
     const [isLogin,setIsLogin] =useState(true);
+    const auth = useContext(AuthContext);
+
     const loginToggle = (event)=>{
         event.preventDefault();
         if(!isLogin === true){
@@ -51,7 +53,7 @@ const Auth = (props) => {
         <form
             onSubmit={(event) => {
                 event.preventDefault();
-                console.log(formState);
+                auth.login();
             }}
         >
             <button onClick={loginToggle}>Toggle Mode</button>
