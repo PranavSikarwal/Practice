@@ -1,6 +1,7 @@
 const axios = require('axios');
 const HttpError = require('../models/http-error');
-const API_Key = "7E8AUUzAPODIPPQDm8MFuA1ROIpIf347";
+require('dotenv').config();
+const API_Key = process.env.GEOENCODING_KEY; //tom tom geocoding api key
 
 const geoEncoding = async(address)=>{
     const result  = await axios.get(`https://api.tomtom.com/search/2/geocode/${address}.json?key=${API_Key}`);
