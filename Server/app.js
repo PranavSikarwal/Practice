@@ -8,7 +8,7 @@ const app = express();
 const HttpError = require("./models/http-error");
 const fs = require('fs');
 const path = require('path');
-
+const Port = process.env.PORT || 5000;
 app.use(bodyParser.json());//to parse json data passed thru post request into request body i.e. req.body object
 
 app.use('/uploads/images', express.static(path.join('uploads','images')));
@@ -45,7 +45,7 @@ app.use((error,req,res,next)=>{
 
 mongoose.connect(`mongodb+srv://pranavsikarwal:${process.env.MONGODB_PWD}@places.yic06bw.mongodb.net/?retryWrites=true&w=majority`)
 .then((res)=>{
-    app.listen(5000);
+    app.listen(Port);
     console.log("connected");
 
 }).catch((err)=>{console.log(err)});
