@@ -21,7 +21,7 @@ const Auth = (props) => {
         event.preventDefault();
         if(isLogin){
             try{
-                const responseData = await sendRequest('http://localhost:5000/api/users/login',
+                const responseData = await sendRequest(`${process.env.REACT_APP_HOSTED_URL}api/users/login`,
                'POST',
                 JSON.stringify({
                     email: formState.inputs.email.value,
@@ -42,7 +42,7 @@ const Auth = (props) => {
                 formData.append('email',formState.inputs.email.value);
                 formData.append('password', formState.inputs.password.value);
                 formData.append('image', formState.inputs.image.value);
-                const responseData = await sendRequest('http://localhost:5000/api/users/signup',
+                const responseData = await sendRequest(`${process.env.REACT_APP_HOSTED_URL}api/users/signup`,
                'POST',
                 formData
                 )

@@ -3,7 +3,6 @@ import UserList from "../components/UsersList";
 import { useHttpClient } from "../../shared/hooks/httpHook";
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import { clear } from "@testing-library/user-event/dist/clear";
 
 const Users = () => {
 
@@ -14,10 +13,10 @@ const Users = () => {
   useEffect(()=>{
     const fetchUsers= async()=>{
       try{
-        const responseData = await sendRequest('http://localhost:5000/api/users/');
+        const responseData = await sendRequest(`${process.env.REACT_APP_HOSTED_URL}api/users`);
         setLoadedUsers(responseData.users)
       }catch(error){
-
+        console.log(error);
       }
     }
     fetchUsers();

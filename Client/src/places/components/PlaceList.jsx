@@ -16,13 +16,12 @@ const PlaceList = (props) => {
     <>
       
       <div className={styles.placeList}>
-      
         {props.items.map((item) => (
           <PlaceItem
             key={item.id}
             id={item.id}
             title={item.title}
-            image={`http://localhost:5000/${item.image}`}
+            image={process.env.REACT_APP_PINATA_HOSTED_URL + item.image}
             description={item.description}
             creatorId={item.creator}
             address={item.address}

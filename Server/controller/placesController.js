@@ -5,7 +5,11 @@ const {v4} = require('uuid') //v4 specifically as it has timestamp component in 
 const Place = require('../models/Place'); //model name should start with capital letter
 const User = require('../models/User');
 const mongoose = require('mongoose');
-const fs = require('fs');
+const axios = require('axios');
+require('dotenv').config;
+const pinataSDK = require('@pinata/sdk');
+const pinata = new pinataSDK({ pinataJWTKey: process.env.PINATA_API_JWT});
+const { Readable } = require('stream');
 
 exports.getPlaceById = async(req,res,next)=>{
     const pid = req.params.pid;
@@ -54,11 +58,21 @@ exports.createPlace = async(req,res, next)=>{
     }catch{
         return next(new HttpError("Place can not be geocoded",400));
     }
+    
+    const stream = await Readable.from(req.file.buffer);
+    const result = await pinata.pinFileToIPFS(stream, {
+        pinataMetadata: {
+            name: process.env.MYNAME
+        }
+    }
+    );
+    const ImgHash = result.IpfsHash;
+    console.log(result, ImgHash);
 
     const createdPlace = new Place({
         title,
         description,
-        image: req.file.path,
+        image: ImgHash,
         address,
         location: coordinates,
         creator
@@ -186,9 +200,9 @@ exports.deletePlace= async(req,res,next) => {
         return next(new HttpError("Removing place failed, try again later.",500));
     }
     //deleting image when place is deleted
-    fs.unlink(imgPath, err=>{
-        console.log(err);
-    })
+    // fs.unlink(imgPath, err=>{
+    //     console.log(err);
+    // })
 
     res.status(200).json({message: "deleted place", place: deletedPlace.toObject({getters:true})});
 } ;

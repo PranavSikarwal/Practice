@@ -8,16 +8,13 @@ const MIME_TYPE_MAP = {
 };
 
 const fileUpload = multer({
-    limits: 500000,
-    storage: multer.diskStorage({
-        destination: (req, file, cb)=>{
-            cb(null, 'uploads/images');
-        } ,
-        filename: (req, file, cb)=>{
-            const ext = MIME_TYPE_MAP[file.mimetype];
-            //pass first arg as error if got error or null if no error
-            cb(null, v4() +'.'+ext);
-        }
+    limits: {
+        fileSize: 100000
+    },
+    storage: multer.memoryStorage({
+        destination: function(req, file, callback) {
+         callback(null, "");
+        },
     }),
     fileFilter: (req, file, cb)=>{
         const isValid = !!MIME_TYPE_MAP[file.mimetype];

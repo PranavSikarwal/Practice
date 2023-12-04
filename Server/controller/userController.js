@@ -4,7 +4,12 @@ const {validationResult} = require("express-validator");
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 require('dotenv').config;
+const { Readable } = require('stream');
+const pinataSDK = require('@pinata/sdk');
+
+
 
 exports.getUsers = async (req,res,next)=>{
     let users;
@@ -45,11 +50,23 @@ exports.postSignUp = async (req,res,next)=>{
     }catch(error){
         return next(new HttpError("hashing Password failed, could not create User.", 500));
     }
+
+    const stream = Readable.from(req.file.buffer);
+    const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
+    const result = await pinata.pinFileToIPFS(stream, {
+        pinataMetadata: {
+            name: process.env.MYNAME
+        }
+    }
+    );
+    const ImgHash = result.IpfsHash;
+    console.log(result, ImgHash);
+
     const newUser = new User({
         name,
         email,
         password: hashedPassword,
-        image: req.file.path,
+        image: ImgHash,
         places: []
     });
 

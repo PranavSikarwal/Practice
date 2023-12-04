@@ -24,7 +24,7 @@ const UpdatePlace = (props) => {
     try {
         console.log(formState);
         await sendRequest(
-          `http://localhost:5000/api/places/${placeId}`,
+          `${process.env.REACT_APP_HOSTED_URL}api/places/${placeId}`,
           "PATCH",
           JSON.stringify({
             title: formState.inputs.title.value,
@@ -55,7 +55,7 @@ const UpdatePlace = (props) => {
     const fetchPlaces = async () => {
         try{
             const responseData = await sendRequest(
-                `http://localhost:5000/api/places/${placeId}`
+                `${process.env.REACT_APP_HOSTED_URL}api/places/${placeId}`
               );
               setIdentifiedPlace(responseData.place);
       

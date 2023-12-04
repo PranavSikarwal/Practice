@@ -17,7 +17,7 @@ const UsersList = (props) => {
           key={user.id}
           name={user.name}
           id={user.id}
-          image={`http://localhost:5000/${user.image}`}
+          image={`${process.env.REACT_APP_PINATA_HOSTED_URL}${user.image}`}
           placeCount={user.places.length}
         />
       )}

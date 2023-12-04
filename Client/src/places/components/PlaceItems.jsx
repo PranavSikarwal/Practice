@@ -31,7 +31,7 @@ const PlaceItems = (props) => {
 
     //we passed null in place of body
     await sendRequest(
-      `http://localhost:5000/api/places/${props.id}`,
+      `${process.env.REACT_APP_HOSTED_URL}api/places/${props.id}`,
       "DELETE",
       null,
       { Authorization: `Bearer ${auth.token}` }
