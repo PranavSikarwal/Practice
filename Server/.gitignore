@@ -155,5 +155,5 @@ yarn-debug.log*
 yarn-error.log*
 
 #folders to ignore
-uploads/images/
+
 >>>>>>> 972845d (Initialize project using Create React App)
