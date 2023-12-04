@@ -5,6 +5,8 @@ const {v4} = require('uuid') //v4 specifically as it has timestamp component in 
 const Place = require('../models/Place'); //model name should start with capital letter
 const User = require('../models/User');
 const mongoose = require('mongoose');
+const fs = require('fs');
+
 exports.getPlaceById = async(req,res,next)=>{
     const pid = req.params.pid;
     let place;
@@ -31,18 +33,21 @@ exports.getPlacesByUserId = async(req,res,next)=>{
         return next(new HttpError("Could Not find user or Error Occured, Check userID once again",500))
     }
     if(places.length==0){
-        return next(new HttpError("No user found",404));
+        return next(new HttpError("No Place found for the given User, Add places by moving to Add Place",404));
     }
     res.json({places: places.map(place=>place.toObject({getters: true}))});
 }
 
 exports.createPlace = async(req,res, next)=>{
     const error = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
+    console.log(req.body);
     if(!error.isEmpty()){
+        
         console.log(error);
         return next(new HttpError("Validation Failed", 422));
     }
-    const {title, description, address, imageUrl, creator} = req.body;
+    
+    const {title, description, address, creator} = req.body;
     let coordinates;
     try{
         coordinates = await geoCoding(address);
@@ -53,7 +58,7 @@ exports.createPlace = async(req,res, next)=>{
     const createdPlace = new Place({
         title,
         description,
-        imageUrl,
+        image: req.file.path,
         address,
         location: coordinates,
         creator
@@ -126,6 +131,10 @@ exports.updatePlace = async (req,res,next)=>{
     if(!updatePlace){
         return next(new HttpError("No place found with given ID, check id once again.",500));
     }
+    if(updatePlace.creator.toString()!==req.userData.userId){
+        const error = new HttpError("You are not allowed to edit this place", 401);
+        return next(error);
+    }
     updatePlace.title= title;
     updatePlace.description = description;
     try{
@@ -152,6 +161,12 @@ exports.deletePlace= async(req,res,next) => {
         //when place not found for deletion
     }
 
+    if(deletedPlace.creator.id.toString()!==req.userData.userId){
+        const error = new HttpError("You are not allowed to delete this place", 401);//401 means unauthorized
+        return next(error);
+    }
+
+    const imgPath = deletedPlace.image;
     try{
         const sess = await mongoose.startSession();
         sess.startTransaction();
@@ -170,7 +185,10 @@ exports.deletePlace= async(req,res,next) => {
         console.log(error);
         return next(new HttpError("Removing place failed, try again later.",500));
     }
-
+    //deleting image when place is deleted
+    fs.unlink(imgPath, err=>{
+        console.log(err);
+    })
 
     res.status(200).json({message: "deleted place", place: deletedPlace.toObject({getters:true})});
 } ;

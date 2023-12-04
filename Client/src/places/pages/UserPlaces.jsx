@@ -1,39 +1,43 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import PlaceList from "../components/PlaceList";
-import styles from "./UserPlaces.module.css";
 import { useParams } from "react-router-dom";
+import { useHttpClient } from "../../shared/hooks/httpHook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import styles from "./UserPlaces.module.css";
 
-const DummyPlaces = [
-  {
-    id: "p1",
-    title: "Empire State Building",
-    description: "One of the most famous sky scrapers in the world!!",
-    imageUrl: "",
-    address: "20 W 34th St, New York, NY 10001",
-    location: {
-      lat: 40.7484405,
-      lng: -73.9878584,
-    },
-    creator: "u2",
-  },
-  {
-    id: "p2",
-    title: "Empire State Building",
-    description: "One of the most famous sky scrapers in the world!!",
-    imageUrl: "",
-    address: "20 W 34th St, New York, NY 10001",
-    location: {
-      lat: 40.7484405,
-      lng: -73.9878584,
-    },
-    creator: "u3",
-  }
-];
 
 const UserPlaces = () => {
-  const uid= useParams().userId;
-  const loadedPlaces = DummyPlaces.filter(places=>places.creator===uid);
-  return (<PlaceList items={loadedPlaces} />);
+  const [loadedPlaces, setLoadedPlaces] = useState([]);
+  const uid = useParams().userId;
+  const {isLoading, error, sendRequest, clearError} = useHttpClient();
+
+  useEffect(()=>{
+    const fetchPlaces = async()=>{
+      try{
+        const responseData = await sendRequest(`http://localhost:5000/api/places/user/${uid}`);
+        setLoadedPlaces(responseData.places);
+
+      }catch(err){
+
+      }
+    }
+    fetchPlaces();
+  },[uid, sendRequest]);
+
+  const placeDeleteHandler = (deletedId)=>{
+    setLoadedPlaces(prevLoadedPlaces=> prevLoadedPlaces.filter(place=>place.id!==deletedId));
+  }
+
+  return (<>
+  <ErrorModal error={error} onClear = {clearError} />
+  {isLoading 
+    && 
+    <div style={{margin:"auto"}}>
+      <LoadingSpinner /> 
+    </div>}
+  {!isLoading && < PlaceList onDeletePlace={placeDeleteHandler} items={loadedPlaces} />}
+  </>);
 };
 
 export default UserPlaces;

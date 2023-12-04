@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState, useCallback} from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -14,16 +14,13 @@ import UpdatePlace from "./places/pages/UpdatePlace";
 // import Map from "./shared/components/UIElements/map";
 import Auth from "./users/pages/Auth";
 import { AuthContext } from "./shared/context/AuthContext";
+import { useAuth } from "./shared/hooks/auth-hook";
 
 const App = () => {
-  const [isLoggedin, setLogin] = useState(false);
-  const login = useCallback(() => {
-    setLogin(true);
-  }, []);
-
   let routes;
+  const {token, login, logout, userId } = useAuth();
   
-  if (isLoggedin) {
+  if (token) {
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -38,7 +35,7 @@ const App = () => {
         <Route path="/places/:placeid">
           <UpdatePlace />
         </Route>
-        <Redirect to="/"/>
+        <Redirect to="/" />
       </Switch>
     );
   } else {
@@ -57,18 +54,20 @@ const App = () => {
       </Switch>
     );
   }
-  const logout = () => {
-    setLogin(false);
-  };
+
   return (
     <AuthContext.Provider
-      value={{ isLoggedin: isLoggedin, login: login, logout: logout }}
+      value={{
+        isLoggedin: !!token,
+        token: token,
+        userId: userId,
+        login: login,
+        logout: logout,
+      }}
     >
       <Router>
         <MainHeader />
-        <main className="main">
-          {routes}
-        </main>
+        <main className="main">{routes}</main>
       </Router>
     </AuthContext.Provider>
   );

@@ -3,7 +3,7 @@ import UserItem from "./UserItems";
 import styles from './UsersList.module.css'
 
 const UsersList = (props) => {
-  if (props.items.length === 0) {
+  if (props.items.length?props.items.length === 0:false) {
     return (
       <>
         <h2>No Users Found!!!</h2>
@@ -17,8 +17,8 @@ const UsersList = (props) => {
           key={user.id}
           name={user.name}
           id={user.id}
-          image={user.image}
-          placeCount={user.places}
+          image={`http://localhost:5000/${user.image}`}
+          placeCount={user.places.length}
         />
       )}
     </ul>

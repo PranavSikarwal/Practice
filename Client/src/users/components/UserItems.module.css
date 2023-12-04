@@ -5,7 +5,7 @@
     align-items: center;
     border-radius: 1rem;
     border: 0.1rem solid black;
-    margin:auto;
+    margin:1rem auto;
     width: 45rem;
     min-width: 30rem;
     padding: 0.3rem 1rem 0.3rem 0.3rem;
@@ -21,13 +21,14 @@
 .img{
     height: 5rem;
     width: 5rem;
-    padding-right: 1rem;
+    margin: 1rem;
     mix-blend-mode: darken;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center center;
     mix-blend-mode: darken;
     text-decoration: none;
+    border-radius: 50%;
 }
 .name{
     font-size: 3rem;

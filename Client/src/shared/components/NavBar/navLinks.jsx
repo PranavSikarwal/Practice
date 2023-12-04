@@ -5,8 +5,15 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Navlinks = (props) => {
     const auth = useContext(AuthContext);
+    console.log(auth.userId);
+    const myPlacesString = `/${auth.userId}/places`;
+    const logoutHandler = ()=>{
+        auth.logout();
+    }
+    
     return (
         <ul className={styles.NavLink + " " + props.className}>
+            
             <li>
                 <NavLink to="/" activeClassName={styles.active} exact>
                     ALL USERS
@@ -15,7 +22,7 @@ const Navlinks = (props) => {
             {auth.isLoggedin && (
                 <>
                     <li>
-                        <NavLink to="/u1/places" activeClassName={styles.active}>
+                        <NavLink to={myPlacesString} activeClassName={styles.active}>
                             MY PLACES
                         </NavLink>
                     </li>
@@ -23,6 +30,12 @@ const Navlinks = (props) => {
                         <NavLink to="/places/new" activeClassName={styles.active}>
                             ADD PLACE
                         </NavLink>
+                        
+                    </li>
+                    <li>
+                        <button onClick={logoutHandler} >
+                            Logout
+                        </button>
                     </li>
                 </>
             )}

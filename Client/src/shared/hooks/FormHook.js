@@ -34,7 +34,7 @@ export const useForm = (input, formValidity) => {
     });
     
     //this function must be inside useCallback as it is dependency of useEffect in Input element
-    //So whenever NewPlace re renders new copy of below function is created
+    //So whenever NewPlace re-renders new copy of below function is created
     //which triggers useEffect and hence trigger inputHandler again and loop runs again and again
     const inputHandler = useCallback((id, val, isValid) => {
         dispatch({

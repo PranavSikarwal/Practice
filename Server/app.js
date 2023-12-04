@@ -6,8 +6,12 @@ const placesRoutes = require('./routes/placesRoutes');
 const bodyParser = require("body-parser");
 const app = express();
 const HttpError = require("./models/http-error");
+const fs = require('fs');
+const path = require('path');
 
 app.use(bodyParser.json());//to parse json data passed thru post request into request body i.e. req.body object
+
+app.use('/uploads/images', express.static(path.join('uploads','images')));
 
 //CORS error resolve for front-end
 app.use((req,res,next)=>{
@@ -25,6 +29,13 @@ app.use((req,res,next)=>{
     throw error; //as sync we can throw error if async then return next(error) is must
 })
 app.use((error,req,res,next)=>{
+    //very important with security pov
+    //this is to delete file if got error on request which stores file
+    if(req.file){
+        fs.unlink(req.file.path, err=>{
+            console.log(err);
+        });
+    }
     if(res.headerSent){
         return next(error);
     }
