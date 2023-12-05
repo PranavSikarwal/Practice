@@ -1,5 +1,6 @@
 const multer = require("multer");
 const {v4} = require('uuid');
+const HttpError = require("../models/http-error");
 
 const MIME_TYPE_MAP = {
     'image/png': 'png',
@@ -15,6 +16,11 @@ const fileUpload = multer({
         destination: function(req, file, callback) {
          callback(null, "");
         },
+        filename: (req, file, cb)=>{
+            const ext = MIME_TYPE_MAP[file.mimetype];
+            //pass first arg as error if got error or null if no error
+            cb(null, v4() +'.'+ext);
+        }
     }),
     fileFilter: (req, file, cb)=>{
         const isValid = !!MIME_TYPE_MAP[file.mimetype];

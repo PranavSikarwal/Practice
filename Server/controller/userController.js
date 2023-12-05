@@ -22,9 +22,9 @@ exports.getUsers = async (req,res,next)=>{
     res.status(201).json({users: users.map(user=>user.toObject({getters:true}))});
 }
 
-exports.postSignUp = async (req,res,next)=>{
-    const error = validationResult(req);
-    if(!error.isEmpty()){
+exports.postSignUp = async (error,req,res,next)=>{
+    const err = validationResult(req);
+    if(!err.isEmpty()){
         console.log(error);
         return next(new HttpError("Invalid Submission", 422));
     }
@@ -34,7 +34,7 @@ exports.postSignUp = async (req,res,next)=>{
     let existingUser;
     try{
         existingUser = await User.findOne({email: email});
-    }catch(error){
+    }catch(err){
         return next(new HttpError("fetching email failed, check email or try again later.",500));
     }
     
@@ -47,20 +47,25 @@ exports.postSignUp = async (req,res,next)=>{
     try{
         hashedPassword = await bcrypt.hash(password, 12); //12 indicates salting rounds
 
-    }catch(error){
+    }catch(err){
         return next(new HttpError("hashing Password failed, could not create User.", 500));
     }
-
-    const stream = Readable.from(req.file.buffer);
-    const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
-    const result = await pinata.pinFileToIPFS(stream, {
-        pinataMetadata: {
-            name: process.env.MYNAME
+    let ImgHash;
+    if(!error){
+        const stream = Readable.from(req.file.buffer);
+        const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
+        const result = await pinata.pinFileToIPFS(stream, {
+            pinataMetadata: {
+                name: process.env.MYNAME
+            }
         }
+        );
+        ImgHash = result.IpfsHash;
+        console.log(result, ImgHash);
+    } else{
+        return next(new HttpError("Unable to upload image, Size of image should be less than 100kb", 500));
     }
-    );
-    const ImgHash = result.IpfsHash;
-    console.log(result, ImgHash);
+    
 
     const newUser = new User({
         name,
