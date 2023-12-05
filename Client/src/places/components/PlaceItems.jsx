@@ -78,8 +78,8 @@ const PlaceItems = (props) => {
         </div>
         <div className={styles.itemsInfo}>
           <h2>{props.title}</h2>
-          <p>{props.address}</p>
-          <p>{props.descriptiopn}</p>
+          <h3 >{props.description}</h3>
+          <p style={{fontStyle:"italic"}}>{props.address}</p>
         </div>
         <div className={styles.actions}>
           <button onClick={openMapHandler} className={styles.btn}>
