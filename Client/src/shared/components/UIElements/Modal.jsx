@@ -19,7 +19,7 @@ const ModalOverlay = (props) => {
         <div className={props.modalClass + " " + styles.content}>
           {props.children}
         </div>
-        <footer className={props.footerCLass + " " + styles.footer}>
+        <footer style={{display: "flex", flexDirection:"row", alignItems:"center", justifyContent:"center"}} className={props.footerCLass + " " + styles.footer}>
           {props.footer}
         </footer>
       </form>

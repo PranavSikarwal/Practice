@@ -116,7 +116,7 @@ const UpdatePlace = (props) => {
             initialValid={true}
             onInput={inputChangeHandler}
           />
-          <button type="submit" disabled={!formState.isValid}>
+          <button style={{margin:"0"}} className="card-button" type="submit" disabled={!formState.isValid}>
             Update
           </button>
         </form>

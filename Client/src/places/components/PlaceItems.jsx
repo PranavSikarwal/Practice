@@ -47,7 +47,7 @@ const PlaceItems = (props) => {
         onShow={openMapHandler}
         onClick={closeMapHandler}
         header={props.address}
-        footer={<button onClick={closeMapHandler}>Cancel</button>}
+        footer={<button style={{margin:"0"}} className="card-button" onClick={closeMapHandler}>Cancel</button>}
       >
         <div>
           <Map center={props.coordinates} />
@@ -60,8 +60,8 @@ const PlaceItems = (props) => {
         header={"Delete this Place"}
         footer={
           <>
-            <button onClick={closeDeleteModal}>Cancel</button>
-            <button onClick={confirmDeleteModal}>Delete</button>
+            <button style={{margin:"0"}} className="card-button" onClick={closeDeleteModal}>Cancel</button>
+            <button style={{margin:"0"}} className="card-button" onClick={confirmDeleteModal}>Delete</button>
           </>
         }
       >
