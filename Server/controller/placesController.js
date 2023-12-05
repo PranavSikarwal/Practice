@@ -42,10 +42,10 @@ exports.getPlacesByUserId = async(req,res,next)=>{
     res.json({places: places.map(place=>place.toObject({getters: true}))});
 }
 
-exports.createPlace = async(error, req,res, next)=>{
+exports.createPlace = async(req,res, next)=>{
     const err = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
     console.log(req.body);
-    
+
     if(!error.isEmpty()){
         
         console.log(error);
@@ -61,20 +61,17 @@ exports.createPlace = async(error, req,res, next)=>{
     }
 
     let ImgHash;
-    if(!error){
-        const stream = Readable.from(req.file.buffer);
-        const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
-        const result = await pinata.pinFileToIPFS(stream, {
-            pinataMetadata: {
-                name: process.env.MYNAME
-            }
+    const stream = Readable.from(req.file.buffer);
+    const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
+    const result = await pinata.pinFileToIPFS(stream, {
+        pinataMetadata: {
+            name: process.env.MYNAME
         }
-        );
-        ImgHash = result.IpfsHash;
-        console.log(result, ImgHash);
-    } else{
-        return next(new HttpError("Unable to upload image, Size of image should be less than 100kb", 500));
     }
+    );
+    ImgHash = result.IpfsHash;
+    console.log(result, ImgHash);
+    
     // const stream = await Readable.from(req.file.buffer);
     // const result = await pinata.pinFileToIPFS(stream, {
     //     pinataMetadata: {

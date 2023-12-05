@@ -22,10 +22,10 @@ exports.getUsers = async (req,res,next)=>{
     res.status(201).json({users: users.map(user=>user.toObject({getters:true}))});
 }
 
-exports.postSignUp = async (error,req,res,next)=>{
+exports.postSignUp = async (req,res,next)=>{
     const err = validationResult(req);
     if(!err.isEmpty()){
-        console.log(error);
+        console.log(err);
         return next(new HttpError("Invalid Submission", 422));
     }
     //multer will also give req.file as file i.e. image
@@ -51,21 +51,17 @@ exports.postSignUp = async (error,req,res,next)=>{
         return next(new HttpError("hashing Password failed, could not create User.", 500));
     }
     let ImgHash;
-    if(!error){
-        const stream = Readable.from(req.file.buffer);
-        const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
-        const result = await pinata.pinFileToIPFS(stream, {
-            pinataMetadata: {
-                name: process.env.MYNAME
-            }
-        }
-        );
-        ImgHash = result.IpfsHash;
-        console.log(result, ImgHash);
-    } else{
-        return next(new HttpError("Unable to upload image, Size of image should be less than 100kb", 500));
-    }
     
+    const stream = Readable.from(req.file.buffer);
+    const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
+    const result = await pinata.pinFileToIPFS(stream, {
+        pinataMetadata: {
+            name: process.env.MYNAME
+        }
+    }
+    );
+    ImgHash = result.IpfsHash;
+    console.log(result, ImgHash);   
 
     const newUser = new User({
         name,

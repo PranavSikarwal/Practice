@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const Port = process.env.PORT || 5000;
 const cors = require('cors');
-
+const multer = require('multer');
 app.use(cors({
     "origin": "*",
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -44,6 +44,11 @@ app.use((error,req,res,next)=>{
     //         console.log(err);
     //     });
     // }
+
+    //handles multer file Size exceeded Error
+    if (error instanceof multer.MulterError) {
+        res.status(418).json({message: "exceeded the 100kb size of image"});
+    }
     if(res.headerSent){
         return next(error);
     }

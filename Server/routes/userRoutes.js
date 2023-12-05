@@ -5,14 +5,15 @@ const {
   postSignUp,
   postLogIn,
 } = require("../controller/userController");
-const fileUpload = require("../middleware/file-upload");
+const HttpError = require("../models/http-error");
+const fileUpload = require("../middleware/file-upload").single('image');
 const router = express.Router();
 
 router.get("/", getUsers);
 //using multer middleware .single provides middleware of our requirement
 router.post(
   "/signup",
-  fileUpload.single('image'),
+  fileUpload,
   [
     check("name").not().isEmpty(),
     check("email").normalizeEmail().isEmail(),
