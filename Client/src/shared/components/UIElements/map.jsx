@@ -12,7 +12,7 @@ const Map = (props) => {
 
       map.current = new maplibregl.Map({
         container: mapElement.current,
-        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${process.env.REACT_APP_MAPLIBREGL_KEY}`,
+        style: `https://api.maptiler.com/maps/streets-v2/style.json?key=t3MEXMGv64kn2RuQv7FJ`,
         center: [lng, lat],
         zoom: 15,
       });
