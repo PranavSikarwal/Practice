@@ -42,7 +42,7 @@ exports.getPlacesByUserId = async(req,res,next)=>{
     res.json({places: places.map(place=>place.toObject({getters: true}))});
 }
 
-exports.createPlace = async(req,res, next)=>{
+exports.createPlace = async(error, req,res, next)=>{
     const error = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
     console.log(req.body);
     if(!error.isEmpty()){
@@ -59,15 +59,30 @@ exports.createPlace = async(req,res, next)=>{
         return next(new HttpError("Place can not be geocoded",400));
     }
     
-    const stream = await Readable.from(req.file.buffer);
-    const result = await pinata.pinFileToIPFS(stream, {
-        pinataMetadata: {
-            name: process.env.MYNAME
+    let ImgHash;
+    if(!error){
+        const stream = Readable.from(req.file.buffer);
+        const pinata = new pinataSDK({pinataJWTKey: process.env.PINATA_API_JWT});
+        const result = await pinata.pinFileToIPFS(stream, {
+            pinataMetadata: {
+                name: process.env.MYNAME
+            }
         }
+        );
+        ImgHash = result.IpfsHash;
+        console.log(result, ImgHash);
+    } else{
+        return next(new HttpError("Unable to upload image, Size of image should be less than 100kb", 500));
     }
-    );
-    const ImgHash = result.IpfsHash;
-    console.log(result, ImgHash);
+    // const stream = await Readable.from(req.file.buffer);
+    // const result = await pinata.pinFileToIPFS(stream, {
+    //     pinataMetadata: {
+    //         name: process.env.MYNAME
+    //     }
+    // }
+    // );
+    // const ImgHash = result.IpfsHash;
+    // console.log(result, ImgHash);
 
     const createdPlace = new Place({
         title,
