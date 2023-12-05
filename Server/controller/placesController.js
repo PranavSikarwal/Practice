@@ -43,8 +43,9 @@ exports.getPlacesByUserId = async(req,res,next)=>{
 }
 
 exports.createPlace = async(error, req,res, next)=>{
-    const error = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
+    const err = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
     console.log(req.body);
+    
     if(!error.isEmpty()){
         
         console.log(error);
@@ -58,7 +59,7 @@ exports.createPlace = async(error, req,res, next)=>{
     }catch{
         return next(new HttpError("Place can not be geocoded",400));
     }
-    
+
     let ImgHash;
     if(!error){
         const stream = Readable.from(req.file.buffer);
