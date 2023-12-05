@@ -43,7 +43,7 @@ exports.getPlacesByUserId = async(req,res,next)=>{
 }
 
 exports.createPlace = async(req,res, next)=>{
-    const err = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
+    const error = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
     console.log(req.body);
 
     if(!error.isEmpty()){
