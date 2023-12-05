@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import styles from "./PlaceItems.module.css";
+import "./PlaceItems.css";
 import Modal from "../../shared/components/UIElements/Modal";
 import Map from "../../shared/components/UIElements/map";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
@@ -49,7 +49,7 @@ const PlaceItems = (props) => {
         header={props.address}
         footer={<button onClick={closeMapHandler}>Cancel</button>}
       >
-        <div className={styles.mapContainer}>
+        <div>
           <Map center={props.coordinates} />
         </div>
       </Modal>
@@ -67,30 +67,35 @@ const PlaceItems = (props) => {
       >
         <p>Confirm delete this Place?</p>
       </Modal>
-      <li className="placeItem__container">
-        {isLoading && <LoadingSpinner asOverlay />}
-        <div className={styles.image}>
-          <img
-            src={props.image}
-            style={{ height: 200, width: 300 }}
-            alt={props.title}
-          />
-        </div>
-        <div className={styles.itemsInfo}>
-          <h2>{props.title}</h2>
-          <h3 >{props.description}</h3>
-          <p style={{fontStyle:"italic"}}>{props.address}</p>
-        </div>
-        <div className={styles.actions}>
-          <button onClick={openMapHandler} className={styles.btn}>
+      <div styles={{display:"flex", height:"75vh", width:"100vw", alignItems:"center", justifyContent:"center"}}>
+        {isLoading && <LoadingSpinner center asOverlay />}
+      </div>
+      <li className="custom-card">
+        <h2 className="card-title">{props.title}</h2>
+
+        <img
+        className="card-image"
+          src={props.image}
+          style={{ height: 200, width: 300 }}
+          alt={props.title}
+        />
+    
+       
+        <h3 className="card-description" >{props.description}</h3>
+        <p className="card-address" style={{fontStyle:"italic"}}>{props.address}</p>
+        
+        <div className="button-container">
+          <button className="card-button" onClick={openMapHandler} >
             View on Map
           </button>
           {auth.userId === props.creatorId && (
             <>
-              <Link to={`/places/${props.id}`}>
-                <button className={styles.btn}>Edit</button>
+              <button  className="card-button " >
+              <Link className="edit" to={`/places/${props.id}`}>
+                Edit
               </Link>
-              <button onClick={openDeleteModal} className={styles.btn}>
+              </button>
+              <button className="card-button" onClick={openDeleteModal} >
                 Delete
               </button>
             </>

@@ -14,7 +14,6 @@ const PlaceList = (props) => {
  
   return (
     <>
-      
       <div className={styles.placeList}>
         {props.items.map((item) => (
           <PlaceItem
