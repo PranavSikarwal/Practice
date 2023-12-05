@@ -9,8 +9,6 @@ require('dotenv').config;
 const { Readable } = require('stream');
 const pinataSDK = require('@pinata/sdk');
 
-
-
 exports.getUsers = async (req,res,next)=>{
     let users;
     try{
@@ -90,9 +88,10 @@ exports.postSignUp = async (req,res,next)=>{
 
 exports.postLogIn = async(req,res,next)=>{
     const {email, password} = req.body;
+    const emailLowerCase = email.toLowerCase();
     let existingUser;
     try{
-        existingUser = await User.findOne({email: email});
+        existingUser = await User.findOne({email: emailLowerCase});
     }catch(error){
         return next(new HttpError("Fetching user for given email Id faild check Email or try again later",500));
     }
