@@ -33,9 +33,9 @@ const Navlinks = (props) => {
                         
                     </li>
                     <li>
-                        <button onClick={logoutHandler} >
-                            Logout
-                        </button>
+                        <a href="#" onClick={logoutHandler} >
+                            LOGOUT
+                        </a>
                     </li>
                 </>
             )}
