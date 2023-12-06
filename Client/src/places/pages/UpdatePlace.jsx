@@ -86,7 +86,7 @@ const UpdatePlace = (props) => {
   if (isLoading) {
     return (
       <div>
-        <LoadingSpinner />
+        <LoadingSpinner asOverlay/>
       </div>
     );
   }

@@ -24,7 +24,7 @@ const MainNav = (props) => {
           &#9776;
         </button>
         <h1 className={styles.title}>
-          <Link to="/">YourPlaces</Link>
+          <Link to="/">ShareIT</Link>
         </h1>
         <nav className={styles.navLinks}>
           <NavLinks className="displayNone" />

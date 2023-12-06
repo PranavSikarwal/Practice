@@ -34,7 +34,7 @@ const UserPlaces = () => {
   {isLoading 
     && 
     <div style={{margin:"auto"}}>
-      <LoadingSpinner /> 
+      <LoadingSpinner asOverlay/> 
     </div>}
   {!isLoading && < PlaceList onDeletePlace={placeDeleteHandler} items={loadedPlaces} />}
   </>);
