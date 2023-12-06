@@ -44,7 +44,7 @@ exports.getPlacesByUserId = async(req,res,next)=>{
 
 exports.createPlace = async(req,res, next)=>{
     const error = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
-    console.log(req.body);
+    console.log(req.file.filename);
 
     if(!error.isEmpty()){
         
@@ -70,7 +70,6 @@ exports.createPlace = async(req,res, next)=>{
     }
     );
     ImgHash = result.IpfsHash;
-    console.log(result, ImgHash);
     
     // const stream = await Readable.from(req.file.buffer);
     // const result = await pinata.pinFileToIPFS(stream, {
@@ -138,10 +137,8 @@ exports.createPlace = async(req,res, next)=>{
 exports.updatePlace = async (req,res,next)=>{
     const error = validationResult(req); //express-validator performs check operation and pass error obj to next middleware
     if(!error.isEmpty()){
-        console.log(error);
         return next(new HttpError("Validation Failed", 422));
     }
-
     const {title, description} = req.body;
     const pid = req.params.pid;
     let updatePlace;
@@ -193,7 +190,7 @@ exports.deletePlace= async(req,res,next) => {
         return next(error);
     }
 
-    const imgPath = deletedPlace.image;
+    const imgHash = deletedPlace.image;
     try{
         const sess = await mongoose.startSession();
         sess.startTransaction();
@@ -208,14 +205,22 @@ exports.deletePlace= async(req,res,next) => {
         //deletedPlace.creator was populated with user data hence we can perform save on that
         //and this will surely save the user as it was populated
         await sess.commitTransaction();
-    }catch(error){
+    } catch(error){
         console.log(error);
         return next(new HttpError("Removing place failed, try again later.",500));
     }
+
     //deleting image when place is deleted
-    // fs.unlink(imgPath, err=>{
-    //     console.log(err);
-    // })
+    let imgFound;
+    try{
+        imgFound = await Place.findOne({'image': imgHash});
+    }catch(err){
+        return next(new HttpError("failed fetching img, try once again",500));
+    }
+    if(imgFound==null){
+        const deletedPin = await pinata.unpin(imgHash);
+        console.log(deletedPin);
+    }
 
     res.status(200).json({message: "deleted place", place: deletedPlace.toObject({getters:true})});
 } ;
